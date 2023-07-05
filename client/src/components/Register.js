@@ -28,7 +28,7 @@ const Register = () => {
     })
   }
 
-  const addUserdata = (e) => {
+  const addUserdata = async (e) => {
     e.preventDefault();
 
     const { fname, email, password, cpassword } = inpval;
@@ -67,7 +67,25 @@ const Register = () => {
         position: "top-center"
       });
     } else {
-      // console.log("user registration succesfully done");
+      const data = await fetch("/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          fname, email, password, cpassword
+        })
+      });
+
+      const res = await data.json();
+      // console.log(res.status);
+
+      if (res.status === 201) {
+        toast.success("Registration Successfully done 😃!", {
+          position: "top-center"
+        });
+        setInpval({ ...inpval, fname: "", email: "", password: "", cpassword: "" });
+      }
     }
   }
 

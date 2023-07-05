@@ -47,7 +47,24 @@ const Login = () => {
                 position: "top-center"
             });
         } else {
-            console.log("user login succesfully done");
+            const data = await fetch("/login", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify({
+                email, password
+              })
+            });
+      
+            const res = await data.json();
+            // console.log(res.status);
+      
+            if(res.status === 201){
+                localStorage.setItem("usersdatatoken",res.result.token);
+                // history("/dash")
+                setInpval({...inpval,email:"",password:""});
+            }
         }
     }
 
