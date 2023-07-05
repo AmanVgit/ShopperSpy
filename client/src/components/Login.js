@@ -1,10 +1,55 @@
 import React, { useState } from 'react'
 import "./mix.css"
-import {NavLink} from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Login = () => {
 
-    const [passShow,setPassShow] = useState(false);
+    const [passShow, setPassShow] = useState(false);
+
+    const [inpval, setInpval] = useState({
+        email: "",
+        password: "",
+    });
+
+    const setVal = (e) => {
+        // console.log(e.target.value);
+        const { name, value } = e.target;
+
+        setInpval(() => {
+            return {
+                ...inpval,
+                [name]: value
+            }
+        })
+    }
+
+    const loginuser = async (e) => {
+        e.preventDefault();
+
+        const { email, password } = inpval;
+
+        if (email === "") {
+            toast.error("email is required!", {
+                position: "top-center"
+            });
+        } else if (!email.includes("@")) {
+            toast.warning("includes @ in your email!", {
+                position: "top-center"
+            });
+        } else if (password === "") {
+            toast.error("password is required!", {
+                position: "top-center"
+            });
+        } else if (password.length < 6) {
+            toast.error("password must be 6 char!", {
+                position: "top-center"
+            });
+        } else {
+            console.log("user login succesfully done");
+        }
+    }
 
     return (
         <>
@@ -18,22 +63,23 @@ const Login = () => {
                         <div className="form_input">
                             <label htmlFor="email">Email</label>
                             <div className="two">
-                            <input type="email" name="email" id="email" placeholder='Enter Your Email Address' />
+                                <input type="email" name="email" id="email" value={inpval.email} onChange={setVal} placeholder='Enter Your Email Address' />
 
                             </div>
                         </div>
                         <div className="form_input">
                             <label htmlFor="password">Password</label>
                             <div className="two">
-                                <input type={!passShow ? "password" : "text"} name="password" id="password" placeholder='Enter Your password' />
-                                <div className="showpass" onClick={()=>setPassShow(!passShow)}>
-                                    {!passShow?"Show":"Hide"}
+                                <input type={!passShow ? "password" : "text"} name="password" id="password" value={inpval.password} onChange={setVal} placeholder='Enter Your password' />
+                                <div className="showpass" onClick={() => setPassShow(!passShow)}>
+                                    {!passShow ? "Show" : "Hide"}
                                 </div>
                             </div>
                         </div>
-                        <button className='btn'>Login</button>
+                        <button className='btn' onClick={loginuser}>Login</button>
                         <p>Don't have an Account? <NavLink to="/register">Sign Up</NavLink></p>
                     </form>
+                    <ToastContainer />
                 </div>
             </section>
         </>
